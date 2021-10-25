@@ -11,8 +11,8 @@ DROP TABLE IF EXISTS `announcements`;
 CREATE TABLE `announcements` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `body` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -21,25 +21,89 @@ CREATE TABLE `announcements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+DROP TABLE IF EXISTS `bookable_availabilities`;
+CREATE TABLE `bookable_availabilities` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `bookable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bookable_id` bigint unsigned NOT NULL,
+  `range` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `from` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `to` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_bookable` tinyint(1) NOT NULL DEFAULT '0',
+  `priority` smallint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bookable_availabilities_bookable_type_bookable_id_index` (`bookable_type`,`bookable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS `bookable_bookings`;
+CREATE TABLE `bookable_bookings` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `bookable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bookable_id` bigint unsigned NOT NULL,
+  `customer_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_id` bigint unsigned NOT NULL,
+  `starts_at` datetime DEFAULT NULL,
+  `ends_at` datetime DEFAULT NULL,
+  `canceled_at` datetime DEFAULT NULL,
+  `timezone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `quantity` int unsigned NOT NULL,
+  `total_paid` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `currency` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `formula` json DEFAULT NULL,
+  `options` json DEFAULT NULL,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bookable_bookings_bookable_type_bookable_id_index` (`bookable_type`,`bookable_id`),
+  KEY `bookable_bookings_customer_type_customer_id_index` (`customer_type`,`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS `bookable_rates`;
+CREATE TABLE `bookable_rates` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `bookable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bookable_id` bigint unsigned NOT NULL,
+  `range` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `from` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `to` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `base_cost` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `unit_cost` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `priority` smallint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `bookable_rates_bookable_type_bookable_id_index` (`bookable_type`,`bookable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 DROP TABLE IF EXISTS `countries`;
 CREATE TABLE `countries` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `capital` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `citizenship` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `country_code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `currency` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `currency_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `currency_sub_unit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `currency_symbol` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `iso_3166_2` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `iso_3166_3` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `region_code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `sub_region_code` varchar(3) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `capital` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `citizenship` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country_code` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `currency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_sub_unit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_symbol` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `iso_3166_2` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `iso_3166_3` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `region_code` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `sub_region_code` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `eea` tinyint(1) NOT NULL DEFAULT '0',
-  `calling_code` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `flag` varchar(6) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `calling_code` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `flag` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -294,8 +358,25 @@ INSERT INTO `countries` (`id`, `capital`, `citizenship`, `country_code`, `curren
 (887,	'San’a',	'Yemenite',	'887',	'Yemeni rial',	'YER',	'fils (inv.)',	'﷼',	'Republic of Yemen',	'YE',	'YEM',	'Yemen',	'142',	'145',	0,	'967',	'YE.png'),
 (894,	'Lusaka',	'Zambian',	'894',	'Zambian kwacha (inv.)',	'ZMW',	'ngwee (inv.)',	'ZK',	'Republic of Zambia',	'ZM',	'ZMB',	'Zambia',	'002',	'014',	0,	'260',	'ZM.png');
 
-DROP TABLE IF EXISTS `m_category`;
-CREATE TABLE `m_category` (
+DROP TABLE IF EXISTS `m_fares`;
+CREATE TABLE `m_fares` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `duration` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` float NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `m_fares` (`id`, `duration`, `price`, `created_at`, `updated_at`) VALUES
+(1,	'0 - 1 Hour',	0,	'2021-10-24 13:54:58',	'2021-10-24 13:54:58'),
+(2,	'1 - 2 Hours',	20,	'2021-10-24 13:55:22',	'2021-10-24 13:55:22'),
+(3,	'2 - 3 Hours',	60,	'2021-10-24 13:55:38',	'2021-10-24 13:55:38'),
+(4,	'3 - 4 Hours',	240,	'2021-10-24 13:55:52',	'2021-10-24 13:55:52'),
+(5,	'> 4 Hours',	300,	'2021-10-24 13:56:07',	'2021-10-24 13:56:07');
+
+DROP TABLE IF EXISTS `m_status`;
+CREATE TABLE `m_status` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -303,16 +384,16 @@ CREATE TABLE `m_category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `m_category` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1,	'Food',	'2021-10-08 04:30:28',	'2021-10-08 04:30:28'),
-(2,	'Drinks',	'2021-10-08 04:30:37',	'2021-10-08 04:30:37'),
-(3,	'Beverages',	'2021-10-08 04:31:05',	'2021-10-08 04:31:05'),
-(4,	'Others',	'2021-10-08 04:31:40',	'2021-10-08 04:31:40');
+INSERT INTO `m_status` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1,	'Unavailable‌',	'2021-10-08 04:30:28',	'2021-10-08 04:30:28'),
+(2,	'Available',	'2021-10-08 04:30:37',	'2021-10-08 04:30:37'),
+(3,	'Occupied',	'2021-10-08 04:31:05',	'2021-10-08 04:31:05'),
+(4,	'Fully Booked',	'2021-10-24 07:32:35',	'2021-10-24 07:32:35');
 
 DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -328,12 +409,17 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8,	'2015_12_30_171734_add_foreign_keys',	1),
 (9,	'2017_08_24_000000_create_settings_table',	1),
 (10,	'2019_08_22_140712_create_announcements_table',	1),
-(11,	'2019_12_14_000001_create_personal_access_tokens_table',	1);
+(11,	'2019_12_14_000001_create_personal_access_tokens_table',	1),
+(12,	'2021_10_22_064001_create_bookable_bookings_table',	2),
+(13,	'2021_10_22_064002_create_bookable_rates_table',	3),
+(14,	'2021_10_22_064003_create_bookable_availabilities_table',	4),
+(15,	'2021_10_22_064004_create_ticketable_tickets_table',	5),
+(16,	'2021_10_22_064005_create_ticketable_bookings_table',	6);
 
 DROP TABLE IF EXISTS `password_resets`;
 CREATE TABLE `password_resets` (
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   KEY `password_resets_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -363,9 +449,9 @@ INSERT INTO `permission_role` (`permission_id`, `role_id`) VALUES
 DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `display_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `display_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `removable` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -381,17 +467,17 @@ INSERT INTO `permissions` (`id`, `name`, `display_name`, `description`, `removab
 (5,	'settings.general',	'Update General System Settings',	'',	0,	'2021-10-05 21:33:25',	'2021-10-05 21:33:25'),
 (6,	'settings.auth',	'Update Authentication Settings',	'Update authentication and registration system settings.',	0,	'2021-10-05 21:33:25',	'2021-10-05 21:33:25'),
 (7,	'settings.notifications',	'Update Notifications Settings',	'',	0,	'2021-10-05 21:33:25',	'2021-10-05 21:33:25'),
-(8,	'restaurant.manage',	'Manage Restaurant',	'Manage restaurant and their data',	1,	'2021-10-06 16:38:34',	'2021-10-06 16:40:51'),
+(8,	'parking.manage',	'Manage Parking Bay',	'Manage parking bay and their data',	1,	'2021-10-06 16:38:34',	'2021-10-18 21:47:54'),
 (9,	'transactions-orders.manage',	'Manage Transactions & Orders',	'Manage transactions and orders',	1,	'2021-10-08 22:21:25',	'2021-10-08 22:22:05');
 
 DROP TABLE IF EXISTS `personal_access_tokens`;
 CREATE TABLE `personal_access_tokens` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `tokenable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint unsigned NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -403,14 +489,17 @@ CREATE TABLE `personal_access_tokens` (
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `created_at`, `updated_at`) VALUES
 (1,	'Vanguard\\User',	1,	'Iphone 11 Pro',	'4a740a9724cc347bb05b575e24164036f446767b6224011395f46dc2966351c0',	'[\"*\"]',	'2021-10-12 05:54:20',	'2021-10-08 23:23:27',	'2021-10-12 05:54:20'),
 (2,	'Vanguard\\User',	1,	'Iphone 11 Pro',	'6ae81d94b10376c3c893b81379c5fcacd7a1f9f233db28dda5680afac8928e0d',	'[\"*\"]',	NULL,	'2021-10-08 23:40:58',	'2021-10-08 23:40:58'),
-(3,	'Vanguard\\User',	1,	'Iphone 11 Pro',	'dc87a399826d1d731e98d2f9f019929d63a6c2f29b9d751e83eec42bf593a1f9',	'[\"*\"]',	NULL,	'2021-10-10 23:11:41',	'2021-10-10 23:11:41');
+(3,	'Vanguard\\User',	1,	'Iphone 11 Pro',	'dc87a399826d1d731e98d2f9f019929d63a6c2f29b9d751e83eec42bf593a1f9',	'[\"*\"]',	NULL,	'2021-10-10 23:11:41',	'2021-10-10 23:11:41'),
+(4,	'Vanguard\\User',	1,	'Iphone XR',	'e5d6430873e5581a4ad337bb8ebdfe96fc9c5b73fefcaf5ed4176f0a183cbbe7',	'[\"*\"]',	'2021-10-22 18:56:19',	'2021-10-20 23:12:37',	'2021-10-22 18:56:19'),
+(5,	'Vanguard\\User',	3,	'Iphone XR',	'ee01e63e310020567a447da6b55fa783a063a81f868c592ebcf19f6d7d8a1031',	'[\"*\"]',	'2021-10-22 19:01:37',	'2021-10-22 18:59:58',	'2021-10-22 19:01:37'),
+(6,	'Vanguard\\User',	1,	'Iphone XR',	'57ab1dccc45ca2f377548102c09df89b4a6cee81c3ab8c252d37d2ab2b6c5e91',	'[\"*\"]',	'2021-10-22 19:01:58',	'2021-10-22 19:01:24',	'2021-10-22 19:01:58');
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `display_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `display_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `removable` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -420,28 +509,27 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `name`, `display_name`, `description`, `removable`, `created_at`, `updated_at`) VALUES
 (1,	'Admin',	'Admin',	'System administrator.',	0,	'2021-10-05 21:33:25',	'2021-10-05 21:33:25'),
-(2,	'User',	'User',	'Default system user.',	0,	'2021-10-05 21:33:25',	'2021-10-05 21:33:25');
+(2,	'User',	'User',	'Default system users',	0,	'2021-10-05 21:33:25',	'2021-10-22 16:31:43');
 
 DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
-  `payload` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `payload` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_activity` int NOT NULL,
   UNIQUE KEY `sessions_id_unique` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('6D5xjbWtrE9N7WgcTIpjm1wsiQwWOLMQMFoHqonv',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiSlluZFgybzVmdEh0RzJHOGlzNGZNQmdNZXp6RElOYnVMdTJUeGhvUCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vbG9jYWxob3N0OjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzNkYzdhOTEzZWY1ZmQ0Yjg5MGVjYWJlMzQ4NzA4NTU3M2UxNmNmODIiO2k6MTt9',	1634010861),
-('MBfPBLTpefk6IxoqdJkH529Bl9Ke1z4qUkQWiEVi',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'YTo1OntzOjY6Il90b2tlbiI7czo0MDoid3JtZWpBTDBSdnRjaUkzQTQ2NFdETEg3WXJLM2k3aG5FTGtrQ3dwVSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjI4OiJodHRwOi8vbG9jYWxob3N0OjgwMDAvb3JkZXJzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzNkYzdhOTEzZWY1ZmQ0Yjg5MGVjYWJlMzQ4NzA4NTU3M2UxNmNmODIiO2k6MTt9',	1633963799);
+('nbMjoXZLCBZ1qXkPaAO0XwCxdrYeq1Et9pYIwvBs',	NULL,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',	'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiY05WTUlta3pJYXJRTkhIODV2bnJXWVFWSWJWZm9jWndwaWpFMUNnVyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6NDc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9wYXJraW5nLWJheXMvY3JlYXRlIjt9czo4OiJvcmRlcl9pZCI7aToxO3M6ODoiZnVsbG5hbWUiO3M6MTI6Ikt1ZGEgVGVyYmFuZyI7fQ==',	1635146090);
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `settings_key_index` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -451,9 +539,9 @@ DROP TABLE IF EXISTS `social_logins`;
 CREATE TABLE `social_logins` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
-  `provider` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `provider_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provider` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provider_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `social_logins_user_id_foreign` (`user_id`),
@@ -464,84 +552,38 @@ CREATE TABLE `social_logins` (
 DROP TABLE IF EXISTS `t_orders`;
 CREATE TABLE `t_orders` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int unsigned NOT NULL,
-  `restaurant_id` int unsigned NOT NULL,
-  `status` tinyint DEFAULT NULL COMMENT '0 = Processing, 1 =  Success, 2 = Canceled',
+  `status` tinyint(1) NOT NULL COMMENT '0 = Processing, 1 =  Success, 2 = Canceled',
   `total_payment` float DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `restaurant_id` (`restaurant_id`),
-  CONSTRAINT `t_orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_orders_ibfk_2` FOREIGN KEY (`restaurant_id`) REFERENCES `t_restaurants` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `t_orders` (`id`, `user_id`, `restaurant_id`, `status`, `total_payment`, `created_at`, `updated_at`) VALUES
-(1,	3,	1,	1,	75000,	'2021-10-10 23:08:03',	'2021-10-11 03:52:17'),
-(2,	4,	1,	1,	60000,	'2021-10-10 23:13:11',	'2021-10-11 03:56:55'),
-(3,	4,	1,	1,	65000,	'2021-10-10 23:14:56',	'2021-10-11 03:57:28'),
-(4,	5,	1,	1,	65000,	'2021-10-10 23:16:05',	'2021-10-11 03:58:04'),
-(6,	2,	1,	1,	80000,	'2021-10-10 23:17:12',	'2021-10-11 03:58:27'),
-(7,	4,	6,	1,	113000,	'2021-10-11 00:31:40',	'2021-10-11 03:58:35'),
-(8,	5,	6,	1,	68000,	'2021-10-11 00:32:31',	'2021-10-11 03:58:38'),
-(9,	4,	6,	1,	156000,	'2021-10-11 00:33:41',	'2021-10-11 03:58:47'),
-(10,	3,	5,	1,	40000,	'2021-10-11 01:17:28',	'2021-10-11 03:59:23'),
-(11,	5,	5,	1,	70000,	'2021-10-11 01:19:16',	'2021-10-11 03:59:39'),
-(12,	4,	4,	1,	181000,	'2021-10-11 04:37:16',	'2021-10-11 04:39:42'),
-(13,	3,	4,	0,	119000,	'2021-10-11 04:43:36',	'2021-10-11 04:43:36');
 
 DROP TABLE IF EXISTS `t_orders_detail`;
 CREATE TABLE `t_orders_detail` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int unsigned NOT NULL,
-  `menu_id` int unsigned NOT NULL,
-  `qty` int DEFAULT NULL,
-  `total_price` float DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci,
+  `bay_id` int unsigned NOT NULL,
+  `fare_id` int unsigned NOT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `starts_at` datetime DEFAULT NULL,
+  `canceled_at` datetime DEFAULT NULL,
+  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
-  KEY `menu_id` (`menu_id`),
+  KEY `bay_id` (`bay_id`),
+  KEY `fare_id` (`fare_id`),
   CONSTRAINT `t_orders_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `t_orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_orders_detail_ibfk_3` FOREIGN KEY (`menu_id`) REFERENCES `t_restaurants_menus` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `t_orders_detail_ibfk_2` FOREIGN KEY (`bay_id`) REFERENCES `t_parking_bay` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `t_orders_detail_ibfk_3` FOREIGN KEY (`fare_id`) REFERENCES `m_fares` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `t_orders_detail` (`id`, `order_id`, `menu_id`, `qty`, `total_price`, `notes`, `created_at`, `updated_at`) VALUES
-(1,	1,	25,	1,	35000,	NULL,	'2021-10-10 23:08:03',	'2021-10-10 23:08:03'),
-(2,	1,	29,	1,	25000,	NULL,	'2021-10-10 23:08:03',	'2021-10-10 23:08:03'),
-(3,	1,	28,	1,	15000,	NULL,	'2021-10-10 23:08:03',	'2021-10-10 23:08:03'),
-(4,	2,	25,	1,	35000,	NULL,	'2021-10-10 23:13:11',	'2021-10-10 23:13:11'),
-(5,	2,	29,	1,	25000,	NULL,	'2021-10-10 23:13:11',	'2021-10-10 23:13:11'),
-(6,	3,	26,	1,	50000,	NULL,	'2021-10-10 23:14:56',	'2021-10-10 23:14:56'),
-(7,	3,	27,	1,	15000,	NULL,	'2021-10-10 23:14:56',	'2021-10-10 23:14:56'),
-(8,	4,	26,	1,	50000,	NULL,	'2021-10-10 23:16:05',	'2021-10-10 23:16:05'),
-(9,	4,	27,	1,	15000,	NULL,	'2021-10-10 23:16:05',	'2021-10-10 23:16:05'),
-(12,	6,	26,	1,	50000,	NULL,	'2021-10-10 23:17:12',	'2021-10-10 23:17:12'),
-(13,	6,	27,	1,	15000,	NULL,	'2021-10-10 23:17:12',	'2021-10-10 23:17:12'),
-(14,	6,	28,	1,	15000,	NULL,	'2021-10-10 23:17:12',	'2021-10-10 23:17:12'),
-(15,	7,	59,	1,	43000,	'more sauce please',	'2021-10-11 00:31:40',	'2021-10-11 00:31:40'),
-(16,	7,	61,	1,	45000,	NULL,	'2021-10-11 00:31:40',	'2021-10-11 00:31:40'),
-(17,	7,	63,	1,	25000,	NULL,	'2021-10-11 00:31:40',	'2021-10-11 00:31:40'),
-(18,	8,	59,	1,	43000,	'more sauce please',	'2021-10-11 00:32:31',	'2021-10-11 00:32:31'),
-(19,	8,	63,	1,	25000,	NULL,	'2021-10-11 00:32:31',	'2021-10-11 00:32:31'),
-(20,	9,	59,	2,	86000,	'more sauce please',	'2021-10-11 00:33:41',	'2021-10-11 00:33:41'),
-(21,	9,	61,	1,	45000,	NULL,	'2021-10-11 00:33:41',	'2021-10-11 00:33:41'),
-(22,	9,	63,	1,	25000,	'more ice',	'2021-10-11 00:33:41',	'2021-10-11 00:33:41'),
-(23,	10,	50,	1,	10000,	NULL,	'2021-10-11 01:17:28',	'2021-10-11 01:17:28'),
-(24,	10,	53,	3,	30000,	NULL,	'2021-10-11 01:17:28',	'2021-10-11 01:17:28'),
-(25,	11,	50,	1,	10000,	NULL,	'2021-10-11 01:19:16',	'2021-10-11 01:19:16'),
-(26,	11,	54,	4,	40000,	NULL,	'2021-10-11 01:19:16',	'2021-10-11 01:19:16'),
-(27,	11,	53,	2,	20000,	NULL,	'2021-10-11 01:19:16',	'2021-10-11 01:19:16'),
-(28,	12,	41,	1,	61000,	'More sauce',	'2021-10-11 04:37:16',	'2021-10-11 04:37:16'),
-(29,	12,	43,	1,	58000,	'More sauce',	'2021-10-11 04:37:16',	'2021-10-11 04:37:16'),
-(30,	12,	48,	2,	62000,	NULL,	'2021-10-11 04:37:16',	'2021-10-11 04:37:16'),
-(31,	13,	41,	1,	61000,	'More sauce',	'2021-10-11 04:43:36',	'2021-10-11 04:43:36'),
-(32,	13,	43,	1,	58000,	'More sauce',	'2021-10-11 04:43:36',	'2021-10-11 04:43:36');
 
-DROP TABLE IF EXISTS `t_restaurants`;
-CREATE TABLE `t_restaurants` (
+DROP TABLE IF EXISTS `t_parking_bay`;
+CREATE TABLE `t_parking_bay` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -556,114 +598,80 @@ CREATE TABLE `t_restaurants` (
   `working_hours_sat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `working_hours_sun` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `open_fullday` tinyint(1) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `t_restaurants` (`id`, `name`, `address`, `map_lat`, `map_long`, `cash_balance`, `working_hours_mon`, `working_hours_tue`, `working_hours_wed`, `working_hours_thurs`, `working_hours_fri`, `working_hours_sat`, `working_hours_sun`, `open_fullday`, `status`, `created_at`, `updated_at`) VALUES
-(1,	'KFC West Gatot Subroto Barat',	'Jalan Gatot Subroto Barat, Padangsambian Kaja, Denpasar City, Bali, Indonesia',	-8.636999,	115.184893,	1000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	1,	1,	'2021-10-08 00:43:24',	'2021-10-09 01:46:06'),
-(2,	'McDonalds West Gatot Subroto Barat',	'Jalan Gatot Subroto Barat, Padangsambian Kaja, Denpasar City, Bali, Indonesia',	-8.637126,	115.185575,	2000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	1,	1,	'2021-10-08 05:05:43',	'2021-10-09 01:50:41'),
-(4,	'PHD Dalung',	'Jalan Raya Padang Luwih, Dalung, Badung Regency, Bali, Indonesia',	-8.635170,	115.175600,	2000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	NULL,	1,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(5,	'Gacoan Noodle Dalung',	'Jalan Padang Luwih, Dalung, Badung Regency, Bali, Indonesia',	-8.630444,	115.175815,	3000000,	'10:00 - 22:00',	'10:00 - 22:00',	'10:00 - 22:00',	'10:00 - 22:00',	'10:00 - 22:00',	'10:00 - 22:00',	'10:00 - 22:00',	NULL,	1,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(6,	'Burger King West Gatot Subroto',	'Jalan Gatot Subroto Barat, Padangsambian Kaja, Denpasar City, Bali, Indonesia',	-8.636909,	115.181640,	3000000,	'11:00 - 21:00',	'11:00 - 21:00',	'11:00 - 21:00',	'11:00 - 21:00',	'11:00 - 21:00',	'11:00 - 21:00',	'11:00 - 21:00',	1,	1,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23');
-
-DROP TABLE IF EXISTS `t_restaurants_menus`;
-CREATE TABLE `t_restaurants_menus` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `restaurant_id` int unsigned NOT NULL,
-  `category_id` int unsigned NOT NULL,
-  `menu_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `menu_price` float DEFAULT NULL,
+  `status` int unsigned DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `restaurant_id` (`restaurant_id`),
-  KEY `category_id` (`category_id`),
-  CONSTRAINT `t_restaurants_menus_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `t_restaurants` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `t_restaurants_menus_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `m_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  KEY `status` (`status`),
+  CONSTRAINT `t_parking_bay_ibfk_1` FOREIGN KEY (`status`) REFERENCES `m_status` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `t_restaurants_menus` (`id`, `restaurant_id`, `category_id`, `menu_name`, `menu_price`, `created_at`, `updated_at`) VALUES
-(25,	1,	1,	'Super Besar 1',	35000,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(26,	1,	1,	'Super Besar 2',	50000,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(27,	1,	2,	'Coca Cola',	15000,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(28,	1,	2,	'Sprite',	15000,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(29,	1,	1,	'Crispy Box',	25000,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(30,	1,	2,	'Mineral Water',	NULL,	'2021-10-09 01:46:06',	'2021-10-09 01:46:06'),
-(31,	2,	1,	'Big Mac Burger',	54000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(32,	2,	1,	'Double Cheese Burger',	45000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(33,	2,	1,	'Beef Burger',	34000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(34,	2,	1,	'Panas 1',	33000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(35,	2,	1,	'Panas 2 With Fries',	38000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(36,	2,	1,	'Chicken Burger Deluxe',	20000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(37,	2,	1,	'McSpicy',	25000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(38,	2,	2,	'Coca Cola',	14000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(39,	2,	2,	'Fanta',	14000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(40,	2,	2,	'Sprite',	14000,	'2021-10-09 01:50:41',	'2021-10-09 01:50:41'),
-(41,	4,	1,	'Meat Lovers Regular',	58000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(42,	4,	1,	'Super Supreme Regular',	61000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(43,	4,	1,	'Chicken Lovers',	58000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(44,	4,	1,	'Tuna Melt',	60000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(45,	4,	1,	'Black Paper Chicken Fettuccine',	56000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(46,	4,	3,	'Garlic Bread',	24000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(47,	4,	2,	'Tropical Punch',	33000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(48,	4,	2,	'Blue Ocean',	31000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(49,	4,	2,	'Lychee Breeze',	31000,	'2021-10-09 01:58:08',	'2021-10-09 01:58:08'),
-(50,	5,	1,	'Setan Noodle',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(51,	5,	1,	'Iblis Noodle',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(52,	5,	1,	'Angle Noodle',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(53,	5,	3,	'Rambutan Dimsum',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(54,	5,	3,	'Udang Keju Dimsum',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(55,	5,	3,	'Siomay',	10000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(56,	5,	2,	'Setan Ice',	5000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(57,	5,	2,	'Tuyul Ice',	5000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(58,	5,	2,	'Green Tea',	9000,	'2021-10-09 02:02:46',	'2021-10-09 02:02:46'),
-(59,	6,	1,	'Whopper',	43000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(60,	6,	1,	'Whopper Jr',	35000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(61,	6,	1,	'Cheese Burger',	45000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(62,	6,	1,	'King\'s Chicken Meal',	43000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(63,	6,	3,	'Large Coke',	25000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(64,	6,	3,	'Large Sprite',	25000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23'),
-(65,	6,	3,	'Large Ice Lemon Tea',	25000,	'2021-10-09 02:09:23',	'2021-10-09 02:09:23');
+INSERT INTO `t_parking_bay` (`id`, `name`, `address`, `map_lat`, `map_long`, `cash_balance`, `working_hours_mon`, `working_hours_tue`, `working_hours_wed`, `working_hours_thurs`, `working_hours_fri`, `working_hours_sat`, `working_hours_sun`, `open_fullday`, `status`, `created_at`, `updated_at`) VALUES
+(1,	'Bay 1',	'Denpasar Timur, Denpasar City, Bali, Indonesia',	-8.642514,	115.250738,	2000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	1,	2,	'2021-10-20 22:43:49',	'2021-10-24 22:46:09'),
+(2,	'Bay 2',	'Denpasar Timur, Denpasar City, Bali, Indonesia',	-8.642447,	115.250761,	2000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	1,	2,	'2021-10-20 22:45:47',	'2021-10-24 22:47:42'),
+(3,	'Bay 3',	'Denpasar Timur, Denpasar City, Bali, Indonesia',	-8.642370,	115.250655,	2000000,	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	'10:00 - 21:00',	1,	2,	'2021-10-20 22:47:17',	'2021-10-24 23:01:52');
 
 DROP TABLE IF EXISTS `t_transactions`;
 CREATE TABLE `t_transactions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int unsigned NOT NULL,
   `order_id` int unsigned NOT NULL,
   `total_payment` float NOT NULL,
   `payment_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `card_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `card_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `payment_completed_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
   KEY `order_id` (`order_id`),
-  CONSTRAINT `t_transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `t_transactions_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `t_orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `t_transactions` (`id`, `user_id`, `order_id`, `total_payment`, `payment_type`, `payment_completed_at`) VALUES
-(1,	3,	1,	75000,	'Cash',	'2021-10-11 03:52:17'),
-(2,	4,	2,	60000,	NULL,	'2021-10-11 03:56:55'),
-(3,	4,	3,	65000,	NULL,	'2021-10-11 03:57:28'),
-(4,	5,	4,	65000,	NULL,	'2021-10-11 03:58:04'),
-(5,	2,	6,	80000,	NULL,	'2021-10-11 03:58:27'),
-(6,	4,	7,	113000,	NULL,	'2021-10-11 03:58:35'),
-(7,	5,	8,	68000,	NULL,	'2021-10-11 03:58:38'),
-(8,	4,	9,	156000,	NULL,	'2021-10-11 03:58:46'),
-(9,	4,	9,	156000,	NULL,	'2021-10-11 03:59:10'),
-(10,	3,	10,	40000,	NULL,	'2021-10-11 03:59:23'),
-(11,	5,	11,	70000,	NULL,	'2021-10-11 03:59:39'),
-(12,	4,	12,	181000,	NULL,	'2021-10-11 04:39:42');
+
+DROP TABLE IF EXISTS `ticketable_bookings`;
+CREATE TABLE `ticketable_bookings` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `ticket_id` int unsigned NOT NULL,
+  `customer_id` int unsigned NOT NULL,
+  `paid` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `currency` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT '0',
+  `is_confirmed` tinyint(1) NOT NULL DEFAULT '0',
+  `is_attended` tinyint(1) NOT NULL DEFAULT '0',
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS `ticketable_tickets`;
+CREATE TABLE `ticketable_tickets` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `ticketable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ticketable_id` bigint unsigned NOT NULL,
+  `slug` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` json NOT NULL,
+  `description` json DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `price` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `currency` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `quantity` int DEFAULT '-1',
+  `sort_order` mediumint unsigned NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ticketable_tickets_ticketable_type_ticketable_id_index` (`ticketable_type`,`ticketable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 DROP TABLE IF EXISTS `user_activity`;
 CREATE TABLE `user_activity` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int unsigned NOT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_activity_user_id_foreign` (`user_id`),
@@ -716,29 +724,73 @@ INSERT INTO `user_activity` (`id`, `description`, `user_id`, `ip_address`, `user
 (43,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-09 02:10:05'),
 (44,	'Logged in.',	1,	'127.0.0.1',	'PostmanRuntime/7.28.4',	'2021-10-10 23:11:41'),
 (45,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-10 23:18:19'),
-(46,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-11 19:54:19');
+(46,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-11 19:54:19'),
+(47,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-12 06:23:11'),
+(48,	'Updated website settings.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-12 06:24:58'),
+(49,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-12 06:25:01'),
+(50,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:01:32'),
+(51,	'Updated website settings.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:01:44'),
+(52,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:01:48'),
+(53,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:06:20'),
+(54,	'Updated website settings.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:06:36'),
+(55,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:06:55'),
+(56,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:08:46'),
+(57,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 15:11:02'),
+(58,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 21:47:22'),
+(59,	'Updated the permission named Manage Parking Bay.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 21:47:54'),
+(60,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-18 21:48:02'),
+(61,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-20 22:20:48'),
+(62,	'Logged in.',	1,	'127.0.0.1',	'PostmanRuntime/7.28.4',	'2021-10-20 23:12:37'),
+(63,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-21 18:12:07'),
+(64,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-21 23:03:23'),
+(65,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 00:41:05'),
+(66,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 00:41:09'),
+(67,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:24:51'),
+(68,	'Updated website settings.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:25:01'),
+(69,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:25:14'),
+(70,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:29:49'),
+(71,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:30:53'),
+(72,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:30:56'),
+(73,	'Updated role with name User.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:31:27'),
+(74,	'Updated role with name User.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:31:36'),
+(75,	'Updated role with name User.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:31:43'),
+(76,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:33:46'),
+(77,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:33:50'),
+(78,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 16:33:59'),
+(79,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 17:58:47'),
+(80,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 18:28:59'),
+(81,	'Logged in.',	3,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 18:57:07'),
+(82,	'Logged in.',	3,	'127.0.0.1',	'PostmanRuntime/7.28.4',	'2021-10-22 18:59:58'),
+(83,	'Logged out.',	3,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 19:00:34'),
+(84,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 19:00:43'),
+(85,	'Logged in.',	1,	'127.0.0.1',	'PostmanRuntime/7.28.4',	'2021-10-22 19:01:24'),
+(86,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 19:38:24'),
+(87,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 23:39:16'),
+(88,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',	'2021-10-22 23:40:00'),
+(89,	'Logged in.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',	'2021-10-24 21:10:01'),
+(90,	'Logged out.',	1,	'127.0.0.1',	'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',	'2021-10-24 21:10:37');
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `username` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `country_id` int unsigned DEFAULT NULL,
   `role_id` int unsigned NOT NULL,
   `birthday` date DEFAULT NULL,
   `last_login` timestamp NULL DEFAULT NULL,
-  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `two_factor_country_code` int DEFAULT NULL,
   `two_factor_phone` int DEFAULT NULL,
-  `two_factor_options` text COLLATE utf8mb4_unicode_ci,
+  `two_factor_options` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `announcements_last_read_at` timestamp NULL DEFAULT NULL,
@@ -754,10 +806,10 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `users` (`id`, `email`, `username`, `password`, `first_name`, `last_name`, `phone`, `avatar`, `address`, `country_id`, `role_id`, `birthday`, `last_login`, `status`, `two_factor_country_code`, `two_factor_phone`, `two_factor_options`, `email_verified_at`, `remember_token`, `created_at`, `updated_at`, `announcements_last_read_at`) VALUES
-(1,	'admin@admin.com',	'admin',	'$2y$10$YSt8gCYIc7E4HTBsL27ZJeqGKmb/cg4f2hpTKFJAWfU9bzap7A5s2',	'Chandrayana',	'Putra',	NULL,	'VUms2h7yYQk6q6ZzirhgEGTDbGfdg4KepoxQNj39.jpg',	NULL,	360,	1,	'1986-11-17',	'2021-10-11 19:54:19',	'Active',	NULL,	NULL,	NULL,	'2021-10-05 21:33:25',	NULL,	'2021-10-05 21:33:25',	'2021-10-11 19:54:19',	NULL),
+(1,	'admin@admin.com',	'admin',	'$2y$10$YSt8gCYIc7E4HTBsL27ZJeqGKmb/cg4f2hpTKFJAWfU9bzap7A5s2',	'Chandrayana',	'Putra',	NULL,	'VUms2h7yYQk6q6ZzirhgEGTDbGfdg4KepoxQNj39.jpg',	NULL,	360,	1,	'1986-11-17',	'2021-10-24 21:10:01',	'Active',	NULL,	NULL,	NULL,	'2021-10-05 21:33:25',	NULL,	'2021-10-05 21:33:25',	'2021-10-24 21:10:01',	NULL),
 (2,	'shc6669@gmail.com',	'indiana.jones',	'$2y$10$I3exPE/DggCRHDxBf4/9YuYBs/Ogo1QH8WGLfMCEkjQ1cF/wy0ZHa',	'Indiana',	'Jones',	NULL,	NULL,	NULL,	840,	2,	NULL,	'2021-10-06 16:49:39',	'Active',	NULL,	NULL,	NULL,	'2021-10-06 16:48:18',	NULL,	'2021-10-06 16:48:18',	'2021-10-08 23:28:02',	NULL),
-(3,	'sherlock_666@live.com',	'sherlock',	'$2y$10$f8LhEL.H/Y9gCQYl5E3iSu52w5/kGGit.vjXALX9e8d3jHJu7NCBO',	'Sherlock',	'Holmes',	NULL,	NULL,	NULL,	826,	2,	NULL,	'2021-10-06 16:50:45',	'Active',	NULL,	NULL,	NULL,	'2021-10-06 16:50:08',	NULL,	'2021-10-06 16:50:08',	'2021-10-08 23:26:58',	NULL),
+(3,	'sherlock_666@live.com',	'sherlock',	'$2y$10$f8LhEL.H/Y9gCQYl5E3iSu52w5/kGGit.vjXALX9e8d3jHJu7NCBO',	'Sherlock',	'Holmes',	NULL,	NULL,	NULL,	826,	2,	NULL,	'2021-10-22 18:59:58',	'Active',	NULL,	NULL,	NULL,	'2021-10-06 16:50:08',	NULL,	'2021-10-06 16:50:08',	'2021-10-22 18:59:58',	NULL),
 (4,	'chandrayana_paq@yahoo.com',	'chandrayana',	'$2y$10$mLzY9fF/5QDzEvjLvEoKkeA4a9um0I79ATxmKPFKIQyttz9pHbN0y',	'Chandrayana',	'Putra',	NULL,	NULL,	'Jl. Kaswari 1663/64 Bukit Nusa Indah, Serua Ciputat',	360,	2,	NULL,	NULL,	'Active',	NULL,	NULL,	NULL,	'2021-10-06 16:51:14',	NULL,	'2021-10-06 16:51:14',	'2021-10-08 23:27:11',	NULL),
 (5,	'arsyanendra.reyswara@gmail.com',	'john.wick',	'$2y$10$2yeAEX4orqwXkIz8uz04cu13MrXfGBfPHRJlO9rLW.Q8MjPw5wXMa',	'John',	'Wick',	NULL,	'BLWneXZjvo6j9pHqgr4iPJLa70bvPp9h5XgL9aTi.png',	NULL,	NULL,	2,	NULL,	NULL,	'Active',	NULL,	NULL,	NULL,	'2021-10-06 17:00:12',	NULL,	'2021-10-06 17:00:12',	'2021-10-08 23:32:07',	NULL);
 
--- 2021-10-12 13:57:03
+-- 2021-10-25 07:17:20
