@@ -1,0 +1,61 @@
+/* Overide Bootstrap File Input */
+.input-group.file-caption-main {
+    display: none !important;
+}
+.kv-file-upload{
+    display: none !important;
+}
+
+/* Google Map Form */
+#map {
+    height: 500px;
+}
+.pac-card {
+    margin: 10px 10px 0 0;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+}
+#pac-container {
+    padding-bottom: 12px;
+    margin-right: 12px;
+}
+
+.pac-controls {
+    display: inline-block;
+    padding: 5px 11px;
+}
+
+.pac-controls label {
+    font-size: 13px;
+    font-weight: 300;
+}
+
+#pac-input:focus {
+    border-color: #4d90fe;
+}
+
+#pac-input, #btn-checkpos {
+    margin-bottom: 10px;
+}
+.lat-long {
+    display: none !important;
+}
+.hide {
+    display: none !important;
+}
+
+
+
+span.info {
+    font-size: 12px;
+    color:#05a3a5;
+}
+span.info-2 {
+    font-size: 11px;
+    color:#05a3a5;
+    cursor: pointer;
+}
